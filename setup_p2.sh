@@ -32,7 +32,7 @@ echo internetGatewayId=$internetGatewayId
 
 echo Update git repo
 # Don't worry about the host identification key
-ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl -L 8888:localhost:8888 "cd /home/ubuntu/fastai ; git pull"
+ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "cd /home/ubuntu/fastai ; git pull"
 
 
 # Get this files directory
