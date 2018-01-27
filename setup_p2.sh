@@ -1,4 +1,7 @@
 #! /bin/bash
+# Note: The AMI ID assumes you are in the Sydney region to find your image ID search for fastai on aws or see: https://github.com/reshamas/fastai_deeplearn_part1/blob/master/tools/aws_ami_gpu_setup.md
+imageId="ami-39ec055b"
+
 export vpcId=`aws ec2 create-vpc --cidr-block 10.0.0.0/28 --query 'Vpc.VpcId' --output text`
 aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-support "{\"Value\":true}"
 aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-hostnames "{\"Value\":true}"
@@ -14,8 +17,7 @@ aws ec2 authorize-security-group-ingress --group-id $securityGroupId --protocol 
 aws ec2 create-key-pair --key-name aws-key --query 'KeyMaterial' --output text > ~/.ssh/aws-key.pem
 chmod 400 ~/.ssh/aws-key.pem
 
-# Note: The AMI ID assumes you are in the Sydney region to find your image ID search for fastai on aws or see: https://github.com/reshamas/fastai_deeplearn_part1/blob/master/tools/aws_ami_gpu_setup.md
-export instanceId=`aws ec2 run-instances --image-id ami-39ec055b --count 1 --instance-type p2.xlarge --key-name aws-key --security-group-ids $securityGroupId --subnet-id $subnetId --associate-public-ip-address --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 128, \"VolumeType\": \"gp2\" } } ]" --query 'Instances[0].InstanceId' --output text`
+export instanceId=`aws ec2 run-instances --image-id $imageId --count 1 --instance-type p2.xlarge --key-name aws-key --security-group-ids $securityGroupId --subnet-id $subnetId --associate-public-ip-address --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 128, \"VolumeType\": \"gp2\" } } ]" --query 'Instances[0].InstanceId' --output text`
 export allocAddr=`aws ec2 allocate-address --domain vpc --query 'AllocationId' --output text`
 
 echo Waiting for instance start...
