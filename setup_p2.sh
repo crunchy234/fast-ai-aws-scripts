@@ -2,6 +2,20 @@
 # Note: The AMI ID assumes you are in the Sydney region to find your image ID search for fastai on aws or see: https://github.com/reshamas/fastai_deeplearn_part1/blob/master/tools/aws_ami_gpu_setup.md
 imageId="ami-39ec055b"
 
+# Get this files directory
+get_script_dir () {
+     SOURCE="${BASH_SOURCE[0]}"
+     # While $SOURCE is a symlink, resolve it
+     while [ -h "$SOURCE" ]; do
+          DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+          SOURCE="$( readlink "$SOURCE" )"
+          # If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
+          [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+     done
+     DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+     echo "$DIR"
+}
+
 export vpcId=`aws ec2 create-vpc --cidr-block 10.0.0.0/28 --query 'Vpc.VpcId' --output text`
 aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-support "{\"Value\":true}"
 aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-hostnames "{\"Value\":true}"
@@ -36,22 +50,9 @@ echo Update git repo
 # Don't worry about the host identification key
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "cd /home/ubuntu/fastai ; git pull"
 
-
-# Get this files directory
-get_script_dir () {
-     SOURCE="${BASH_SOURCE[0]}"
-     # While $SOURCE is a symlink, resolve it
-     while [ -h "$SOURCE" ]; do
-          DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-          SOURCE="$( readlink "$SOURCE" )"
-          # If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
-          [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-     done
-     DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-     echo "$DIR"
-}
-
 echo Connect: ssh -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl -L 8888:localhost:8888
+
+# Create termination script
 terminateCurrentFileName="$(get_script_dir)/terminateCurrent.sh"
 terminateStr="$(get_script_dir)/terminate_p2.sh $instanceId $vpcId $internetGatewayId $subnetId $securityGroupId $routeTableId $allocAddr"
 echo "#! /bin/bash" > $terminateCurrentFileName
