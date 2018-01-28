@@ -48,7 +48,7 @@ echo internetGatewayId=$internetGatewayId
 
 echo Update git repo
 # Don't worry about the host identification key
-ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "export PATH=~/src/anaconda3/bin:\$PATH ; source activate fastai; cd /home/ubuntu/fastai ; git pull; conda env update; sudo apt update ; sudo apt upgrade -y; sudo reboot"
+ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "export PATH=~/src/anaconda3/bin:\$PATH ; source activate fastai; cd /home/ubuntu/fastai ; git pull; conda env update; sudo rm /var/lib/dpkg/lock; sudo apt update ; sudo apt upgrade -y; sudo reboot"
 
 
 connectCurrentFileName="$(get_script_dir)/connectCurrent.sh"
