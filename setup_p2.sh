@@ -56,6 +56,7 @@ sshConnectStr="ssh -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl -L 8888:localhost:8
 echo Connect: $sshConnectStr
 echo "#! /bin/bash" > $connectCurrentFileName
 echo $sshConnectStr >> $connectCurrentFileName
+chmod +x $connectCurrentFileName
 
 # Create termination script
 terminateCurrentFileName="$(get_script_dir)/terminateCurrent.sh"
