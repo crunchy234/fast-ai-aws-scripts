@@ -50,13 +50,19 @@ echo Update git repo
 # Don't worry about the host identification key
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "cd /home/ubuntu/fastai ; git pull"
 
-echo Connect: ssh -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl -L 8888:localhost:8888
+
+connectCurrentFileName="$(get_script_dir)/connectCurrent.sh"
+sshConnectStr="ssh -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl -L 8888:localhost:8888"
+echo Connect: $sshConnectStr
+echo "#! /bin/bash" > $connectCurrentFileName
+echo $sshConnectStr >> $connectCurrentFileName
 
 # Create termination script
 terminateCurrentFileName="$(get_script_dir)/terminateCurrent.sh"
 terminateStr="$(get_script_dir)/terminate_p2.sh $instanceId $vpcId $internetGatewayId $subnetId $securityGroupId $routeTableId $allocAddr"
 echo "#! /bin/bash" > $terminateCurrentFileName
 echo $terminateStr >> $terminateCurrentFileName
+echo "rm -- $connectCurrentFileName" >> $terminateCurrentFileName
 echo "rm -- $terminateCurrentFileName" >> $terminateCurrentFileName
 chmod +x $terminateCurrentFileName
 
