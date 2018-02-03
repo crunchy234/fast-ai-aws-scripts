@@ -52,6 +52,9 @@ echo instanceUrl=$instanceUrl
 echo vpcId=$vpcId
 echo internetGatewayId=$internetGatewayId
 
+# Sleep for a bit to make sure that the EC2 instance has time to boot
+sleep 30s
+
 echo Update git repo
 # Don't worry about the host identification key
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "export PATH=~/src/anaconda3/bin:\$PATH ; source activate fastai; cd /home/ubuntu/fastai ; git pull; conda env update"
