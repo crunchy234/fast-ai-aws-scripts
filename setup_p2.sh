@@ -40,9 +40,6 @@ chmod 400 ~/.ssh/aws-key.pem
 export instanceId=`aws ec2 run-instances --image-id $imageId --count 1 --instance-type p2.xlarge --key-name "aws-key-$(get_unique_id)" --security-group-ids $securityGroupId --subnet-id $subnetId --associate-public-ip-address --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 128, \"VolumeType\": \"gp2\" } } ]" --query 'Instances[0].InstanceId' --output text`
 export allocAddr=`aws ec2 allocate-address --domain vpc --query 'AllocationId' --output text`
 
-echo Waiting for instance start...
-aws ec2 wait instance-running --instance-ids $instanceId
-sleep 10 # wait for ssh service to start running too
 export assocId=`aws ec2 associate-address --instance-id $instanceId --allocation-id $allocAddr --query 'AssociationId' --output text`
 export instanceUrl=`aws ec2 describe-instances --instance-ids $instanceId --query 'Reservations[0].Instances[0].PublicDnsName' --output text`
 echo securityGroupId=$securityGroupId
@@ -52,10 +49,13 @@ echo instanceUrl=$instanceUrl
 echo vpcId=$vpcId
 echo internetGatewayId=$internetGatewayId
 
-# Sleep for a bit to make sure that the EC2 instance has time to boot
-sleep 30s
+echo Waiting for instance start...
+aws ec2 wait instance-running --instance-ids $instanceId
+aws ec2 wait instance-status-ok --instance-ids $instanceId
 
-echo Update git repo
+sleep 10 # wait for ssh service to start running too
+
+echo Update git repo and Anaconda env
 # Don't worry about the host identification key
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "export PATH=~/src/anaconda3/bin:\$PATH ; source activate fastai; cd /home/ubuntu/fastai ; git pull; conda env update"
 
