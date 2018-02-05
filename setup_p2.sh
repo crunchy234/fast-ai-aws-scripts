@@ -38,9 +38,9 @@ aws ec2 create-key-pair --key-name "aws-key-$(get_unique_id)" --query 'KeyMateri
 chmod 400 ~/.ssh/aws-key.pem
 
 export instanceId=`aws ec2 run-instances --image-id $imageId --count 1 --instance-type p2.xlarge --key-name "aws-key-$(get_unique_id)" --security-group-ids $securityGroupId --subnet-id $subnetId --associate-public-ip-address --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 128, \"VolumeType\": \"gp2\" } } ]" --query 'Instances[0].InstanceId' --output text`
-export allocAddr=`aws ec2 allocate-address --domain vpc --query 'AllocationId' --output text`
+#export allocAddr=`aws ec2 allocate-address --domain vpc --query 'AllocationId' --output text`
 
-export assocId=`aws ec2 associate-address --instance-id $instanceId --allocation-id $allocAddr --query 'AssociationId' --output text`
+#export assocId=`aws ec2 associate-address --instance-id $instanceId --allocation-id $allocAddr --query 'AssociationId' --output text`
 export instanceUrl=`aws ec2 describe-instances --instance-ids $instanceId --query 'Reservations[0].Instances[0].PublicDnsName' --output text`
 echo securityGroupId=$securityGroupId
 echo subnetId=$subnetId
@@ -66,6 +66,11 @@ echo Connect: $sshConnectStr
 echo "#! /bin/bash" > $connectCurrentFileName
 echo $sshConnectStr >> $connectCurrentFileName
 chmod +x $connectCurrentFileName
+
+resumeCurrentFileName="$(get_script_dir)/resumeCurrent.sh"
+echo "#! /bin/bash" > $resumeCurrentFileName
+echo "$(get_script_dir)/resume_p2.sh $instanceId" >> $resumeCurrentFileName
+chmod +x $resumeCurrentFileName
 
 # Create termination script
 terminateCurrentFileName="$(get_script_dir)/terminateCurrent.sh"
