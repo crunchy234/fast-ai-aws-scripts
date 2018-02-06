@@ -28,4 +28,4 @@ chmod +x $connectCurrentFileName
 
 echo Waiting for instance start...
 aws ec2 wait instance-running --instance-ids $instanceId
-aws ec2 wait instance-status-ok --instance-ids $instanceId
+echo instance started
