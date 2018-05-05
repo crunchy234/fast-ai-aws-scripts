@@ -18,7 +18,7 @@ get_script_dir () {
 
 instanceUrlFile="$(get_script_dir)/instanceUrl-$imageId.txt"
 
-bash $(get_script_dir)/setup_container.sh
+bash $(get_script_dir)/setup_container.sh $imageId
 
 instanceUrl=$(cat $instanceUrlFile)
 
