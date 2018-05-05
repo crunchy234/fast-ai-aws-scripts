@@ -2,8 +2,6 @@
 # Note: The AMI ID assumes you are in the Sydney region to find your image ID search for fastai on aws or see: https://github.com/reshamas/fastai_deeplearn_part1/blob/master/tools/aws_ami_gpu_setup.md
 imageId="ami-39ec055b"
 
-instanceUrlFile="$(get_script_dir)/instanceUrl-$imageId.txt"
-
 # Get this files directory
 get_script_dir () {
      SOURCE="${BASH_SOURCE[0]}"
@@ -17,6 +15,8 @@ get_script_dir () {
      DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
      echo "$DIR"
 }
+
+instanceUrlFile="$(get_script_dir)/instanceUrl-$imageId.txt"
 
 bash $(get_script_dir)/setup_container.sh
 
