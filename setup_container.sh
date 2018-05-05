@@ -2,7 +2,8 @@
 # Note: The AMI ID assumes you are in the Sydney region to find your image ID search for fastai on aws or see: https://github.com/reshamas/fastai_deeplearn_part1/blob/master/tools/aws_ami_gpu_setup.md
 imageId=$1
 
-if [ -z "$1"]; then
+if [ -z "$1" ]
+then
     echo "please make sure you pass in your desired ami."
     exit 1
 fi
