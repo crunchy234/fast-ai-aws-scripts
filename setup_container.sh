@@ -9,7 +9,8 @@ then
     exit 1
 fi
 
-if [ -z "$2"]; then
+if [ -z "$2" ]
+then
     echo "please make sure you pass in your desired instance type."
     exit 2
 fi
