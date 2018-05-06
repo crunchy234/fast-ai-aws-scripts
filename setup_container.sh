@@ -3,7 +3,8 @@
 imageId=$1
 instanceType=$2
 
-if [ -z "$1"]; then
+if [ -z "$1" ]
+then
     echo "please make sure you pass in your desired ami."
     exit 1
 fi
