@@ -89,6 +89,7 @@ terminateStr="$(get_script_dir)/terminate_p2.sh $instanceId $vpcId $internetGate
 echo "#! /bin/bash" > $terminateCurrentFileName
 echo $terminateStr >> $terminateCurrentFileName
 echo "rm -- $connectCurrentFileName" >> $terminateCurrentFileName
+echo "rm -- $resumeCurrentFileName" >> $terminateCurrentFileName
 echo "rm -- $terminateCurrentFileName" >> $terminateCurrentFileName
 chmod +x $terminateCurrentFileName
 
