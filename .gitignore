@@ -2,3 +2,4 @@ connectCurrent.sh
 resumeCurrent.sh
 terminateCurrent.sh
 instanceUrl*.txt
+extraPublicKeys.txt

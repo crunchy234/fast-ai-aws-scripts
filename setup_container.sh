@@ -3,6 +3,8 @@
 imageId=$1
 instanceType=$2
 
+additionalPublicKeysFile="extraPublicKeys.txt"
+
 if [ -z "$1" ]
 then
     echo "please make sure you pass in your desired ami."
@@ -94,3 +96,9 @@ echo "rm -- $terminateCurrentFileName" >> $terminateCurrentFileName
 chmod +x $terminateCurrentFileName
 
 echo To terminate: $terminateCurrentFileName
+
+# Add aditional public keys if they are specified
+if [ -f $additionalPublicKeysFile ]
+then
+    ssh -oStrictHostKeyChecking=no -i ~/.ssh/aws-key.pem ubuntu@$instanceUrl "echo $(cat $additionalPublicKeysFile) >> /home/ubuntu/.ssh/authorized_keys"
+fi
