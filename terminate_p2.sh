@@ -18,4 +18,9 @@ aws ec2 delete-subnet --subnet-id $subnetId
 aws ec2 delete-route-table --route-table-id $routeTableId
 aws ec2 delete-security-group --group-id $securityGroupId
 aws ec2 delete-vpc --vpc-id $vpcId
-aws ec2 release-address --allocation-id $allocAddr
+
+# remove allocated IP if specified
+if [ -z "$allocAddr" ]
+then
+    aws ec2 release-address --allocation-id $allocAddr
+fi
