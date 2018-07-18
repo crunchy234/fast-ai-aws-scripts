@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 instanceId=$1
+instanceType=$2
 
 # Get this files directory
 get_script_dir () {
@@ -17,6 +18,9 @@ get_script_dir () {
 
 aws ec2 start-instances --instance-ids ${instanceId}
 export instanceUrl=`aws ec2 describe-instances --instance-ids ${instanceId} --query 'Reservations[0].Instances[0].PublicDnsName' --output text`
+
+instanceUrlFile="$(get_script_dir)/instanceUrl-$instanceType.txt"
+echo "$instanceUrl" > $instanceUrlFile
 
 # update connect current file
 connectCurrentFileName="$(get_script_dir)/connectCurrent.sh"
